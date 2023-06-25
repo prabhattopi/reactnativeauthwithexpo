@@ -1,20 +1,39 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar"
+import { StyleSheet, Text, View } from "react-native"
 import { NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import HomeScreen from './screens/HomeScreen';
-import LoginScreens from './screens/LoginScreens';
-
+import HomeScreen from "./screens/HomeScreen"
+import LoginScreens from "./screens/LoginScreens"
+import { auth } from "./firebase/config"
+import { useEffect, useState } from "react"
 
 const Stack = createNativeStackNavigator()
+
 export default function App() {
-  // console.log("hell")
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUser(user)
+    })
+
+    return unsubscribe
+  }, [])
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen options={{headerShown:false}} name="Login" component={LoginScreens} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-
+        {!user ? (
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="Login"
+            component={LoginScreens}
+          />
+        ) : null}
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   )
@@ -22,9 +41,9 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    // backgroundColor: '#fff',
-    // alignItems: 'center',
-    // justifyContent: 'center',
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
-});
+})
