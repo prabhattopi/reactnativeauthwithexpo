@@ -1,15 +1,15 @@
 import { useNavigation } from "@react-navigation/core"
 import React, { useEffect, useState } from "react"
 import {
-  KeyboardAvoidingView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
+  Keyboard,
+  Platform,
 } from "react-native"
 import { auth } from "../firebase/config"
-
 
 const LoginScreens = () => {
   const [email, setEmail] = useState("")
@@ -47,8 +47,16 @@ const LoginScreens = () => {
       .catch((error) => alert(error.message))
   }
 
+  const dismissKeyboard = () => {
+    Keyboard.dismiss()
+  }
+
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding">
+    <TouchableOpacity
+      activeOpacity={1}
+      style={styles.container}
+      onPress={dismissKeyboard}
+    >
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Email"
@@ -76,7 +84,7 @@ const LoginScreens = () => {
           <Text style={styles.buttonOutlineText}>Register</Text>
         </TouchableOpacity>
       </View>
-    </KeyboardAvoidingView>
+    </TouchableOpacity>
   )
 }
 
@@ -87,6 +95,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    paddingHorizontal: 20,
+    paddingTop: Platform.OS === "ios" ? 0 : 20,
   },
   inputContainer: {
     width: "80%",
