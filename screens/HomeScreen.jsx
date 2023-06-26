@@ -4,14 +4,16 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { auth } from "../firebase/config"
 
 
-const HomeScreen = () => {
+const HomeScreen = ({setUser,user}) => {
   const navigation = useNavigation()
 
   const handleSignOut = () => {
     auth
       .signOut()
       .then(() => {
+        setUser(null)
         navigation.navigate("Login")
+        
       })
       .catch((error) => alert(error.message))
   }

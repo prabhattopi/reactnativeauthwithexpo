@@ -11,27 +11,18 @@ import {
 } from "react-native"
 import { auth } from "../firebase/config"
 
-const LoginScreens = () => {
+const LoginScreens = ({setUser}) => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
   const navigation = useNavigation()
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        navigation.navigate("Home")
-      }
-    })
-
-    return unsubscribe
-  }, [])
-
   const handleSignUp = () => {
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user
+        setUser(user)
+        navigation.navigate("Home")
         console.log("Registered with:", user.email)
       })
       .catch((error) => alert(error.message))
@@ -42,6 +33,8 @@ const LoginScreens = () => {
       .signInWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user
+        setUser(user)
+        navigation.navigate("Home")
         console.log("Logged in with:", user.email)
       })
       .catch((error) => alert(error.message))

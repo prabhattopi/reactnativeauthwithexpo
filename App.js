@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar"
 import { StyleSheet, Text, View } from "react-native"
-import { NavigationContainer } from "@react-navigation/native"
+import { NavigationContainer, useNavigation } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import HomeScreen from "./screens/HomeScreen"
 import LoginScreens from "./screens/LoginScreens"
@@ -24,16 +24,14 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         {!user ? (
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="Login"
-            component={LoginScreens}
-          />
-        ) : null}
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-        />
+          <Stack.Screen name="Login" options={{ headerShown: false }}>
+            {(props) => <LoginScreens {...props} setUser={setUser} />}
+          </Stack.Screen>
+        ) : (
+          <Stack.Screen name="Home">
+            {(props) => <HomeScreen {...props} user={user} setUser={setUser} />}
+          </Stack.Screen>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   )
